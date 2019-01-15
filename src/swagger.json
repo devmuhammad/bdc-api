@@ -1,0 +1,10 @@
+{
+    "swagger": "2.0",
+
+    "title" : "Cabsol Bureau De Change API Documentation",
+    "license": {
+        "name": "MIT",
+        "url": "https://opensource.org/licenses/MIT"
+      },
+      "version": "1.0.0" 
+}

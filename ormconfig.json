@@ -1,0 +1,14 @@
+
+{
+  "type": "mysql",
+  "host": "localhost",
+  "port": 3307,
+  "username": "cabsolbdc",
+  "password": "admin",
+  "database": "cabsolbdc",
+  "entities": ["src/entities/*.ts"],
+  "synchronize": true,
+  "cli": {
+    "entitiesDir": "src/entities"
+  }
+}
