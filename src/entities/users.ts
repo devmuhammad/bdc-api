@@ -3,13 +3,20 @@ import {purchase} from "./purchase";
 import {selling} from "./selling";
 import {IsEmail} from 'class-validator';
 import * as crypto from 'crypto';
+import * as bcrypt from 'bcryptjs';
+
 
 @Entity("users",{schema:"cabsolbdc"})
 export class users {
 
-    @PrimaryGeneratedColumn({ 
-        name:"id"
-        })
+    @BeforeInsert()
+    genId(){
+     
+     this.id = parseInt(generate());
+    }
+    @PrimaryColumn({
+            name: 'id',
+    })
     id:number;
         
 
@@ -53,10 +60,11 @@ export class users {
         })
     password:string | null;
     
-    @BeforeInsert()
-    hashPassword(){
-        this.password = crypto.createHmac('sha265', this.password).digest('hex')
-    }
+    // @BeforeInsert()
+    // hashPassword(){       
+    //     this.password = bcrypt.hashSync(this.password,8)
+       
+    // }
 
     @Column("varchar",{ 
         nullable:true,
@@ -76,3 +84,25 @@ export class users {
     sellings:selling[];
     
 }
+
+
+	 
+    let length = 8;
+    let timestamp = +new Date;
+    
+    const _getRandomInt = ( min, max ) => {
+       return Math.floor( Math.random() * ( max - min + 1 ) ) + min;
+    }
+    
+    const generate = function (){
+        let ts = timestamp.toString();
+        let parts = ts.split( "" ).reverse();
+        let id = "";
+        
+        for( let i = 0; i < length; ++i ) {
+           let index = _getRandomInt( 0, parts.length - 1 );
+           id += parts[index];	 
+        }
+        
+        return id;
+    }

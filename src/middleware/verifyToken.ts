@@ -16,7 +16,7 @@ export const verifyToken = async (req: Request, res: Response, next: NextFunctio
     // if everything good, save to request for use in other routes 
     const userId = decoded.id
     
-    next(userId);
+    next();
   });
 
 }

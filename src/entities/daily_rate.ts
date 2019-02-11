@@ -1,4 +1,4 @@
-import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId} from "typeorm";
+import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, Timestamp} from "typeorm";
 import {currency} from "./currency";
 
 
@@ -19,10 +19,10 @@ export class daily_rate {
     currency:currency | null;
 
     
-    @Column("timestamp",{ 
+    @Column({
         name:"datecreated"
         })
-    datecreated:string | null;
+    datecreated:Date | null;
         
 
     @Column("double",{ 

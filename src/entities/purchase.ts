@@ -1,8 +1,9 @@
-import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId} from "typeorm";
+import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, BeforeInsert} from "typeorm";
 import {purchasemain} from "./purchasemain";
 import {currency} from "./currency";
 import {users} from "./users";
 import {selling} from "./selling";
+import {purchase_details} from "./purchase_details";
 
 
 @Entity("purchase",{schema:"cabsolbdc"})
@@ -10,6 +11,7 @@ import {selling} from "./selling";
 @Index("CFK_Purchase_Currency_idx",["currency",])
 @Index("FK_UserID_idx",["user",])
 @Index("FK_Purchasemain_id",["main",])
+
 export class purchase {
 
     @PrimaryGeneratedColumn({
@@ -37,8 +39,8 @@ export class purchase {
     @JoinColumn({ name:'currencyid'})
     currency:currency | null;
 
-    @Column("simple-array")
-    purchase_details:{currencyno: string,note:number,buyingrate: number}[];
+    // @Column("simple-array")
+    // purchase_details:{currencyno: string,note:number,status:string,currency: object,buyingrate:number}[];
 
     // @Column("varchar",{ 
     //     nullable:true,
@@ -55,12 +57,12 @@ export class purchase {
     quantity:number | null;
         
 
-    // @Column("double",{ 
-    //     nullable:true,
-    //     precision:22,
-    //     name:"buyingrate"
-    //     })
-    // buyingrate:number | null;
+    @Column("double",{ 
+        nullable:true,
+        precision:22,
+        name:"buyingrate"
+        })
+    buyingrate:number | null;
         
 
     @Column("double",{ 
@@ -70,6 +72,10 @@ export class purchase {
         })
     totalamount:number | null;
         
+    @BeforeInsert()
+    generateRef(){
+      this.transaction_ref = 'PCH-'+(Date.now().toString(36).substring(2,5) +'-'+ Math.random().toString(36).substr(2, 5)).toUpperCase()
+    }
 
     @Column("varchar",{ 
         nullable:false,
@@ -115,14 +121,20 @@ export class purchase {
         name:"bvn"
         })
     bvn:number | null;
+
+    @Column("int",{ 
+        nullable:true,
+        name:"page"
+        })
+    page:number | null;
         
 
     @Column("varchar",{ 
         nullable:true,
-        length:45,
-        name:"status"
+        length:100,
+        name:"fullname"
         })
-    status:string | null;
+    fullname:string | null;
         
 
    
@@ -147,5 +159,8 @@ export class purchase {
    
     @OneToMany(type=>selling, selling=>selling.purchase,{ onDelete: 'CASCADE' ,onUpdate: 'CASCADE' })
     sellings:selling[];
+
+    @OneToMany(type=>purchase_details, purchase_details=>purchase_details.purchase,{ onDelete: 'CASCADE' ,onUpdate: 'CASCADE' })
+    purchase_detail:purchase_details[];
     
 }

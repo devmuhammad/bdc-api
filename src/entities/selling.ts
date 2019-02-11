@@ -1,8 +1,8 @@
-import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, Timestamp} from "typeorm";
+import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, BeforeInsert} from "typeorm";
 import {purchase} from "./purchase";
 import {currency} from "./currency";
 import {users} from "./users";
-
+import {purchase_details} from "./purchase_details";
 
 @Entity("selling",{schema:"cabsolbdc"})
 @Index("FK_Selling_Currency_idx",["currency",])
@@ -22,13 +22,6 @@ export class selling {
     @ManyToOne(type=>purchase, purchase=>purchase.sellings,{ onDelete: 'CASCADE',onUpdate: 'CASCADE' })
     @JoinColumn({ name:'purchaseid'})
     purchase:purchase | null;
-
-
-    @Column("int",{ 
-        nullable:true,
-        name:"note"
-        })
-    note:number | null;
         
 
    
@@ -40,9 +33,9 @@ export class selling {
     @Column("varchar",{ 
         nullable:true,
         length:45,
-        name:"currencyno"
+        name:"fullname"
         })
-    currencyno:string | null;
+    fullname:string | null;
         
 
     @Column("int",{ 
@@ -51,6 +44,10 @@ export class selling {
         })
     quantity:number | null;
         
+    @BeforeInsert()
+    generateRef(){
+      this.transaction_ref = 'PCH-'+(Date.now().toString(36).substring(2,5) +'-'+ Math.random().toString(36).substr(2, 5)).toUpperCase()
+    }
 
     @Column("varchar",{ 
         nullable:true,
@@ -84,12 +81,12 @@ export class selling {
     totalamount:number | null;
         
 
-    @Column("varchar",{ 
-        nullable:true,
-        length:45,
-        name:"mode_of_purchase"
-        })
-    mode_of_purchase:string | null;
+    // @Column("varchar",{ 
+    //     nullable:true,
+    //     length:45,
+    //     name:"mode_of_purchase"
+    //     })
+    // mode_of_purchase:string | null;
         
 
     @Column("varchar",{ 
@@ -140,4 +137,6 @@ export class selling {
         })
     system_date:string | null;
         
+    @OneToMany(type=>purchase_details, purchase_details=>purchase_details.purchase,{ onDelete: 'CASCADE' ,onUpdate: 'CASCADE' })
+    purchase_detail:purchase_details[];
 }
